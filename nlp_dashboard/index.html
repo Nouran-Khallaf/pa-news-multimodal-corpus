@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive NLP dashboard and human-review workspace for the Patriotic Alternative news corpus.">
+  <title>PA Corpus Explorer</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">PA</div>
+        <div>
+          <h1>Corpus Explorer</h1>
+          <p>NLP analysis &amp; review</p>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Main navigation">
+        <button class="nav-item active" data-view="overview"><span>◫</span> Overview</button>
+        <button class="nav-item" data-view="explorer"><span>⌕</span> Corpus explorer</button>
+        <button class="nav-item" data-view="nlp"><span>⌁</span> NLP visualisations</button>
+        <button class="nav-item" data-view="review"><span>✓</span> Human review</button>
+        <button class="nav-item" data-view="quality"><span>◇</span> Data quality</button>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Interpretation rule</strong>
+        <p>Automated frames, legitimation strategies, actors and coded-language items are candidates until reviewed.</p>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="quiet-button" id="themeToggle">◐ Theme</button>
+        <span id="generatedAt"></span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <button class="mobile-menu" id="mobileMenu" aria-label="Open menu">☰</button>
+          <p class="eyebrow">Interview task corpus</p>
+          <h2 id="viewTitle">Overview</h2>
+        </div>
+        <div class="top-actions">
+          <label class="file-button" title="Attach the current articles.jsonl for full text and image metadata">
+            <input type="file" id="articleFile" accept=".jsonl,.ndjson,.json">
+            <span>＋ Import articles JSONL</span>
+          </label>
+          <button class="primary-button" id="exportReviewTop">Export review</button>
+        </div>
+      </header>
+
+      <div class="notice" id="globalNotice">
+        <span class="notice-dot"></span>
+        <span>Candidate retrieval outputs require human validation before substantive interpretation.</span>
+        <button aria-label="Dismiss" id="dismissNotice">×</button>
+      </div>
+
+      <section class="view active" id="view-overview">
+        <div class="hero panel">
+          <div>
+            <p class="eyebrow">Patriotic Alternative news corpus</p>
+            <h3>Explore the corpus, inspect NLP outputs and record transparent human decisions.</h3>
+            <p class="hero-copy">This static dashboard runs locally in the browser. Review decisions are stored only in this browser until exported.</p>
+          </div>
+          <div class="hero-badge">
+            <span id="reviewProgressHero">0%</span>
+            <small>candidate review complete</small>
+          </div>
+        </div>
+
+        <div class="kpi-grid" id="kpiGrid"></div>
+
+        <div class="grid two-one">
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">Temporal coverage</p><h3>Publication activity by year</h3></div>
+              <span class="chip">Articles</span>
+            </div>
+            <div class="chart" id="overviewTimeline"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">Review queue</p><h3>Validation status</h3></div></div>
+            <div id="reviewStatusSummary" class="status-stack"></div>
+            <button class="secondary-button full" data-go="review">Continue human review</button>
+          </article>
+        </div>
+
+        <div class="grid two">
+          <article class="panel chart-panel">
+            <div class="panel-heading"><div><p class="eyebrow">Candidate retrieval</p><h3>Frame distribution</h3></div></div>
+            <div class="chart" id="overviewFrames"></div>
+          </article>
+          <article class="panel chart-panel">
+            <div class="panel-heading"><div><p class="eyebrow">Lexical profile</p><h3>Most frequent filtered terms</h3></div></div>
+            <div class="chart" id="overviewTerms"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-explorer">
+        <div class="explorer-layout">
+          <aside class="panel filter-panel">
+            <div class="panel-heading"><div><p class="eyebrow">Document filters</p><h3>Find records</h3></div></div>
+            <label class="field"><span>Full-text metadata search</span><input id="docSearch" type="search" placeholder="Title, author, tag or ID"></label>
+            <label class="field"><span>Year</span><select id="yearFilter"><option value="">All years</option></select></label>
+            <label class="field"><span>Author</span><select id="authorFilter"><option value="">All authors</option></select></label>
+            <label class="field"><span>Tag</span><select id="tagFilter"><option value="">All tags</option></select></label>
+            <label class="field"><span>Date quality</span><select id="dateFlagFilter"><option value="">All records</option><option value="ok">Date within range</option><option value="missing">Missing date</option><option value="future">After reference date</option><option value="issue">Any date issue</option></select></label>
+            <label class="field"><span>Images</span><select id="imageFilter"><option value="">Any</option><option value="yes">Has image metadata</option><option value="no">No image metadata</option></select></label>
+            <div class="range-row">
+              <label class="field"><span>Minimum words</span><input id="minWords" type="number" min="0" value="0"></label>
+              <label class="field"><span>Maximum words</span><input id="maxWords" type="number" min="0" placeholder="Any"></label>
+            </div>
+            <button class="secondary-button full" id="clearDocFilters">Clear filters</button>
+            <p class="filter-count" id="docResultCount"></p>
+          </aside>
+
+          <section class="panel document-list-panel">
+            <div class="panel-heading sticky-heading">
+              <div><p class="eyebrow">Corpus records</p><h3>Documents</h3></div>
+              <div class="pager"><button class="secondary-button" id="exportSelection">Export selection</button><button id="docPrev">‹</button><span id="docPage"></span><button id="docNext">›</button></div>
+            </div>
+            <div class="document-list" id="documentList"></div>
+          </section>
+
+          <article class="panel document-detail" id="documentDetail">
+            <div class="empty-state"><div class="empty-icon">⌕</div><h3>Select a document</h3><p>Metadata, full text and images will appear here.</p></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-nlp">
+        <div class="section-toolbar panel">
+          <div><p class="eyebrow">Visual analytics</p><h3>NLP result explorer</h3></div>
+          <div class="segmented" id="nlpTabs">
+            <button class="active" data-nlp-tab="lexical">Lexical</button>
+            <button data-nlp-tab="discourse">Discourse</button>
+            <button data-nlp-tab="entities">Entities</button>
+            <button data-nlp-tab="readability">Readability</button>
+          </div>
+        </div>
+
+        <div class="nlp-tab active" id="nlp-lexical">
+          <article class="panel lexical-method-panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">Auditable preprocessing</p><h3>Clean lexical profile</h3></div>
+              <span class="status-pill good">Stop words removed</span>
+            </div>
+            <div class="method-chip-grid" id="lexicalMethodSummary"></div>
+            <p class="method-note">Frequencies use lowercase spaCy lemmas. The displayed vocabulary retains alphabetic nouns, proper nouns, verbs, adjectives and adverbs only. Frequencies per million use all alphabetic tokens as the denominator, so removing stop words does not inflate normalised rates.</p>
+          </article>
+
+          <div class="grid two">
+            <article class="panel chart-panel">
+              <div class="panel-heading"><div><p class="eyebrow">Frequency</p><h3>Top content lemmas</h3></div><select id="termMetric"><option value="frequency">Frequency</option><option value="perMillion">Per million</option><option value="documentFrequency">Document frequency</option></select></div>
+              <div class="chart tall" id="termChart"></div>
+              <p class="method-note compact-note">Select a bar to open concordance lines for that lemma.</p>
+            </article>
+            <article class="panel chart-panel">
+              <div class="panel-heading"><div><p class="eyebrow">N-grams</p><h3>Content-word sequences</h3></div><select id="ngramSize"><option value="bigrams">Bigrams</option><option value="trigrams">Trigrams</option></select></div>
+              <div class="chart tall" id="ngramChart"></div>
+              <p class="method-note compact-note">Sequences are contiguous runs in which every token passes the content-word filter.</p>
+            </article>
+          </div>
+          <div class="grid two">
+            <article class="panel">
+              <div class="panel-heading"><div><p class="eyebrow">Visual summary</p><h3>Frequency-scaled content terms</h3></div></div>
+              <div class="word-cloud" id="wordCloud"></div>
+            </article>
+            <article class="panel collocation-panel">
+              <div class="panel-heading collocation-heading">
+                <div><p class="eyebrow">Association profile</p><h3>Collocation association map</h3></div>
+                <select id="collocationNode" aria-label="Select node word"></select>
+              </div>
+              <div class="collocation-controls" aria-label="Collocation display controls">
+                <label><span>Association metric</span><select id="collocationMetric"><option value="logDice">logDice</option><option value="pmi">PMI</option></select></label>
+                <label><span>Show</span><select id="collocationLimit"><option value="12">12 collocates</option><option value="20" selected>20 collocates</option><option value="30">30 collocates</option></select></label>
+                <label><span>Minimum spread</span><select id="collocationMinDocs"><option value="1">1 document</option><option value="5" selected>5 documents</option><option value="10">10 documents</option><option value="25">25 documents</option></select></label>
+              </div>
+              <div class="collocation-map" id="collocationNetwork" role="img" aria-label="Association strength by document dispersion"></div>
+              <div class="collocation-legend">
+                <span><i class="legend-dot"></i> Bubble size = co-occurrence</span>
+                <span>→ stronger association</span>
+                <span>↑ broader document spread</span>
+              </div>
+              <p class="method-note compact-note">The map avoids arbitrary network geometry. Horizontal position shows association strength; vertical position shows document frequency on a logarithmic scale. Select a bubble or ranked item to inspect concordance evidence.</p>
+              <div class="collocation-details" id="collocationDetails"></div>
+            </article>
+          </div>
+
+          <article class="panel concordance-panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">KWIC concordance</p><h3>Inspect terms and phrases in context</h3></div>
+              <button class="secondary-button" id="exportConcordance">Export lines</button>
+            </div>
+            <div class="concordance-controls">
+              <label class="field grow"><span>Search term or phrase</span><input id="concordanceQuery" type="search" placeholder="e.g. immigration, white people"></label>
+              <label class="field"><span>Match</span><select id="concordanceMode"><option value="lemma">Lemma</option><option value="token">Surface token/phrase</option><option value="substring">Substring</option></select></label>
+              <label class="field"><span>Maximum lines</span><select id="concordanceLimit"><option>25</option><option selected>50</option><option>100</option><option>250</option></select></label>
+              <label class="check-row concordance-check"><input type="checkbox" id="concordanceFiltered"><span>Current document filters only</span></label>
+              <button class="primary-button" id="runConcordance">Search</button>
+            </div>
+            <div class="concordance-summary" id="concordanceSummary">Enter a term or select one from the frequency chart.</div>
+            <div class="kwic-list" id="concordanceResults"></div>
+          </article>
+
+          <article class="panel keyness-panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">Reference-corpus comparison</p><h3>BNC keyness</h3></div>
+              <button class="secondary-button" id="exportKeyness" disabled>Export keyness</button>
+            </div>
+            <div class="reference-upload">
+              <div>
+                <strong>Load a lemmatised BNC frequency list</strong>
+                <p>Use UCREL whole-corpus List 1.1 or Adam Kilgarriff’s lemma list. The file stays in the browser. A complete list is preferable because absent entries in a cut-off list are unknown, not zero.</p>
+                <p><a href="https://ucrel.lancs.ac.uk/bncfreq/flists.html" target="_blank" rel="noopener noreferrer">UCREL BNC frequency lists ↗</a></p>
+              </div>
+              <label class="file-button"><input type="file" id="bncFile" accept=".txt,.tsv,.csv"><span>＋ Import BNC list</span></label>
+            </div>
+            <div class="keyness-controls">
+              <label class="field"><span>BNC token total</span><input id="bncTokens" type="number" min="1" value="100000000"></label>
+              <label class="field"><span>Direction</span><select id="keynessDirection"><option value="over">Overused in target</option><option value="under">Underused in target</option><option value="all">Both directions</option></select></label>
+              <label class="field"><span>Minimum target frequency</span><input id="keynessMinFreq" type="number" min="1" value="10"></label>
+              <label class="field"><span>Minimum documents</span><input id="keynessMinDocs" type="number" min="1" value="5"></label>
+              <label class="check-row"><input type="checkbox" id="keynessMissingZero"><span>Treat absent BNC terms as zero</span></label>
+              <button class="primary-button" id="runKeyness" disabled>Calculate</button>
+            </div>
+            <div class="reference-status" id="bncStatus">No BNC reference list loaded.</div>
+            <div class="grid two keyness-output">
+              <div class="chart tall" id="keynessChart"></div>
+              <div class="table-wrap keyness-table-wrap"><table><thead><tr><th>Lemma</th><th>Target</th><th>BNC</th><th>G²</th><th>Log ratio</th><th>Docs</th></tr></thead><tbody id="keynessTable"></tbody></table></div>
+            </div>
+            <p class="method-note">Keyness is ranked by log-likelihood (G²); log ratio shows effect direction and magnitude. Target counts are content lemmas, while the denominator is all alphabetic corpus tokens. Use a lemmatised BNC list for like-for-like comparison. Results are exploratory because the BNC and this political-news corpus differ in period and genre.</p>
+          </article>
+        </div>
+
+        <div class="nlp-tab" id="nlp-discourse">
+          <div class="grid two">
+            <article class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">Candidate frames</p><h3>Retrieved frame categories</h3></div></div><div class="chart tall" id="frameChart"></div></article>
+            <article class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">Legitimation</p><h3>Candidate strategy shares</h3></div></div><div class="chart tall" id="legitChart"></div></article>
+          </div>
+          <article class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">Rhetorical signals</p><h3>Corpus-level candidate markers</h3></div></div><div class="chart tall" id="rhetoricalChart"></div></article>
+        </div>
+
+        <div class="nlp-tab" id="nlp-entities">
+          <div class="grid two">
+            <article class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">Named entities</p><h3>Entity-type distribution</h3></div></div><div class="chart tall" id="entityTypeChart"></div></article>
+            <article class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">Actor retrieval</p><h3>Most frequent normalised entities</h3></div><select id="entityLabelFilter"><option value="">All types</option></select></div><div class="chart tall" id="actorChart"></div></article>
+          </div>
+          <p class="method-note">Entity frequencies describe spaCy candidate mentions. They do not by themselves establish ideological salience or the publisher’s position.</p>
+        </div>
+
+        <div class="nlp-tab" id="nlp-readability">
+          <div class="grid two">
+            <article class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">Document relationship</p><h3>Length and estimated readability</h3></div></div><div class="chart tall" id="readabilityScatter"></div></article>
+            <article class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">Lexical diversity</p><h3>MATTR distribution</h3></div></div><div class="chart tall" id="mattrHistogram"></div></article>
+          </div>
+          <p class="method-note">Readability estimates are descriptive signals and should not be interpreted as direct measures of comprehension or ideological complexity.</p>
+        </div>
+      </section>
+
+      <section class="view" id="view-review">
+        <div class="review-layout">
+          <aside class="panel review-filter-panel">
+            <div class="panel-heading"><div><p class="eyebrow">Human validation</p><h3>Review queue</h3></div></div>
+            <label class="field"><span>Queue</span><select id="reviewQueue"><option value="frame">Frames</option><option value="legitimation">Legitimation</option><option value="coded_language">Coded language</option></select></label>
+            <label class="field"><span>Category</span><select id="reviewCategory"><option value="">All categories</option></select></label>
+            <label class="field"><span>Decision</span><select id="reviewStatusFilter"><option value="">All decisions</option><option value="unreviewed">Unreviewed</option><option value="valid">Valid candidate</option><option value="reject">Reject</option><option value="uncertain">Uncertain</option></select></label>
+            <label class="field"><span>Search</span><input type="search" id="reviewSearch" placeholder="Sentence, term or document"></label>
+            <label class="check-row"><input type="checkbox" id="reviewQuotation"><span>Quotation/reported speech only</span></label>
+            <label class="field"><span>Reviewer</span><input id="reviewerName" placeholder="Name or initials"></label>
+            <div class="review-mini-stats" id="reviewMiniStats"></div>
+            <button class="secondary-button full" id="exportReview">Export annotations</button>
+            <label class="file-button full secondary-file"><input type="file" id="importReview" accept=".json"><span>Import annotations</span></label>
+          </aside>
+
+          <article class="panel review-card" id="reviewCard"></article>
+
+          <aside class="panel review-guidance">
+            <div class="panel-heading"><div><p class="eyebrow">Decision support</p><h3>Review guidance</h3></div></div>
+            <ol>
+              <li>Judge only the highlighted candidate category.</li>
+              <li>Check quotation and reported-speech flags before attributing language.</li>
+              <li>Use <strong>uncertain</strong> where context is insufficient.</li>
+              <li>Record a short reason for rejected or ambiguous cases.</li>
+              <li>Export decisions before clearing browser data.</li>
+            </ol>
+            <div class="review-progress-block">
+              <div class="progress-label"><span>Overall reviewed</span><strong id="overallReviewPercent">0%</strong></div>
+              <div class="progress-track"><span id="overallReviewBar"></span></div>
+            </div>
+            <div class="keyboard-help"><kbd>1</kbd> valid <kbd>2</kbd> reject <kbd>3</kbd> uncertain <kbd>→</kbd> next</div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" id="view-quality">
+        <div class="grid two">
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">Integrity</p><h3>Static scan summary</h3></div><span class="status-pill good">No high-confidence hits</span></div>
+            <div class="integrity-grid" id="integrityGrid"></div>
+            <p class="method-note" id="securityAssessment"></p>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">Corpus checks</p><h3>Quality-control status</h3></div></div>
+            <div class="quality-list" id="qualityList"></div>
+          </article>
+        </div>
+        <article class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">Date review</p><h3>Records requiring date inspection</h3></div><button class="secondary-button" id="openDateFlags">Open in explorer</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Flag</th><th>Date</th><th>Title</th><th>Author</th><th>Document ID</th></tr></thead><tbody id="dateIssueTable"></tbody></table></div>
+        </article>
+        <article class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">Reproducibility</p><h3>Current corpus fingerprint</h3></div></div>
+          <div class="hash-block" id="hashBlock"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="data/dashboard_data.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

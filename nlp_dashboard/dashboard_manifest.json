@@ -1,0 +1,86 @@
+{
+  "title": "PA Corpus Explorer",
+  "version": "2.2",
+  "generatedAt": "2026-07-13",
+  "features": [
+    "stop-word-filtered lemma frequencies",
+    "content-word n-grams",
+    "KWIC concordance",
+    "BNC keyness",
+    "direct UCREL List 4.1 FrIn import",
+    "association–dispersion collocation map",
+    "human review"
+  ],
+  "collocationVisualisation": {
+    "name": "Association–dispersion bubble map",
+    "xAxis": "logDice or PMI",
+    "yAxis": "document frequency on a logarithmic scale",
+    "bubbleSize": "co-occurrence count",
+    "interaction": "bubble and ranked-row selection opens KWIC concordance"
+  },
+  "bncReference": {
+    "sourceFormat": "UCREL List 4.1 imaginative vs informative writing",
+    "frequencyColumn": "FrIn",
+    "unit": "per million",
+    "retainedPos": [
+      "NoC",
+      "NoP",
+      "Verb",
+      "Adj",
+      "Adv"
+    ],
+    "uniqueCompatibleTerms": 627
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 4591,
+      "sha256": "20a6cc5cdacc59c733151217e2d06d0f2924029baf652114e9848e6f02982929"
+    },
+    {
+      "path": "assets/app.js",
+      "bytes": 68846,
+      "sha256": "867f3e8578c897d1d5c1ecd34479b422534d9c963d55ee7a5baa33e183819ecd"
+    },
+    {
+      "path": "assets/styles.css",
+      "bytes": 27170,
+      "sha256": "e7be47674b604ca1ed06e67cc1de16949b910fc2ece5cdd27de3564922ac230a"
+    },
+    {
+      "path": "data/bnc_informative_content_lemmas.csv",
+      "bytes": 11515,
+      "sha256": "b3fb663c8a436fea300faa17ad295b7897993377d947fa417ca616f185e13b11"
+    },
+    {
+      "path": "data/bnc_reference_template.csv",
+      "bytes": 41,
+      "sha256": "41b49ed39f684b4023951517b5066b4cf7f3fb0f384109ec307a3b2e387300ad"
+    },
+    {
+      "path": "data/dashboard_data.js",
+      "bytes": 46741010,
+      "sha256": "dbe6b108ee3f438a13d5f664924d5bc9badcbbb72af2fbda6be3b8651eb23f81"
+    },
+    {
+      "path": "index.html",
+      "bytes": 22601,
+      "sha256": "1b95b40a65ab9b4b0fc87aaeb049891369978926e8d8bfc972433ab90acafdbb"
+    },
+    {
+      "path": "scripts/build_dashboard_data.py",
+      "bytes": 22059,
+      "sha256": "a632a0cd1cedb3c3d76a7ae4d9e7d8c78d87a29ee5f2f335b34096f078c4d21f"
+    },
+    {
+      "path": "scripts/prepare_bnc_reference.py",
+      "bytes": 10395,
+      "sha256": "f44ebbf5338fdab6bd9ec6103d2632459838766d4790e131ee78d65355a1f8f2"
+    },
+    {
+      "path": "serve_dashboard.sh",
+      "bytes": 94,
+      "sha256": "fb33a89f4d56bd5a842e69f908dfcec36e650ddce17ef250d26b5852a790899a"
+    }
+  ]
+}
