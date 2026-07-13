@@ -138,6 +138,4 @@ python -m pip install pandas
 
 Automated frames, legitimation strategies, actor mentions, rhetorical markers and coded-language items are candidate retrieval outputs. They must not be reported as validated political findings until reviewed in context.
 
-### Collocation association map
 
-The former circular neighbourhood graphic has been replaced by an association–dispersion bubble map. For a selected node word, the x-axis shows either logDice or PMI, the y-axis shows document frequency on a logarithmic scale, and bubble area reflects co-occurrence. Controls set the metric, number of collocates and minimum document spread. Bubbles and ranked rows open the corresponding KWIC evidence. This avoids treating arbitrary force-directed coordinates as analytical information.
