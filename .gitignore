@@ -1,0 +1,87 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environments
+.env
+.env.*
+venv/
+.venv/
+env/
+ENV/
+conda-env/
+*.conda
+*.egg-info/
+
+# IDE and operating system
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs and Slurm output
+logs/
+*.log
+slurm-*.out
+*.out
+*.err
+
+# Downloaded corpus and raw web content
+data/raw/
+data/processed/
+data/interim/
+data/downloads/
+raw_html/
+html/
+downloads/
+
+# Downloaded and generated images
+images/
+assets/images/
+data/images/
+thumbnails/
+
+# Generated outputs and analysis
+outputs/
+results/
+reports/generated/
+figures/generated/
+cache/
+.cache/
+tmp/
+temp/
+
+# Models and checkpoints
+models/
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.onnx
+
+# Large data formats
+*.jsonl
+*.parquet
+*.feather
+*.pkl
+*.pickle
+*.npz
+*.npy
+*.sqlite
+*.db
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
