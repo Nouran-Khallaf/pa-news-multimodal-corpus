@@ -1,0 +1,9 @@
+-r requirements-core.txt
+torch>=2.6
+transformers>=4.50,<6
+sentence-transformers>=4,<6
+accelerate>=1.0,<2
+bertopic>=0.17,<1
+umap-learn>=0.5.7,<1
+hdbscan>=0.8.40,<1
+safetensors>=0.5,<1

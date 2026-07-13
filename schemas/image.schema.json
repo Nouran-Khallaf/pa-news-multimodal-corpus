@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Article-embedded image record",
+  "type": "object",
+  "required": [
+    "image_id",
+    "document_id",
+    "article_url",
+    "request_url",
+    "final_url",
+    "sha256",
+    "object_path",
+    "mime_type",
+    "byte_count"
+  ],
+  "properties": {
+    "image_id": {
+      "type": "string"
+    },
+    "document_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{20}$"
+    },
+    "article_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "request_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "final_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "object_path": {
+      "type": "string"
+    },
+    "mime_type": {
+      "type": "string",
+      "pattern": "^image/"
+    },
+    "byte_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "alt_text": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "title_text": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "figcaption": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "caption_source": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "width": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "height": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "image_role": {
+      "type": "string",
+      "enum": [
+        "hero",
+        "inline"
+      ]
+    },
+    "source_location": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "dom_index": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    }
+  },
+  "additionalProperties": true
+}

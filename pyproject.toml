@@ -1,0 +1,8 @@
+[project]
+name = "pa-news-multimodal-corpus"
+version = "0.2.0"
+description = "Reproducible collection and analysis pipeline for a public political-news corpus"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

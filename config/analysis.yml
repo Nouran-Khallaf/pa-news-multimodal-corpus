@@ -1,0 +1,99 @@
+paths:
+  collection_root: "outputs/pa_news"
+  articles_jsonl: "outputs/pa_news/data/processed/articles.jsonl"
+  analysis_articles_jsonl: "outputs/pa_news/data/analysis_ready/articles.normalised.jsonl"
+  images_jsonl: "outputs/pa_news/data/processed/images.jsonl"
+  analysis_interim: "outputs/pa_news/analysis/interim"
+  analysis_results: "outputs/pa_news/analysis/results"
+
+models:
+  text_embedding: "sentence-transformers/all-mpnet-base-v2"
+  zero_shot_text: "MoritzLaurer/deberta-v3-base-zeroshot-v2.0"
+  image_text: "google/siglip-base-patch16-224"
+  image_captioning: "Salesforce/blip-image-captioning-base"
+  object_detection: "google/owlvit-base-patch32"
+
+text:
+  spacy_model: "en_core_web_trf"
+  minimum_ngram_frequency: 5
+
+keyness:
+  minimum_target_frequency: 5
+
+collocations:
+  window: 5
+  minimum_collocate_frequency: 5
+
+political_analysis:
+  # These are research prompts, not conclusions. Edit after corpus inspection.
+  node_terms: [nation, national, community, immigration, culture, family, media, government, election]
+  actor_entity_labels: [PERSON, ORG, GPE, NORP, FAC, EVENT]
+  ingroup_markers: [we, us, our, ours, ourselves]
+  outgroup_markers: [they, them, their, theirs, themselves]
+  modals: [must, should, need, ought, will, cannot]
+  certainty_markers: [clearly, certainly, undoubtedly, obviously, definitely]
+  hedges: [may, might, perhaps, reportedly, apparently, arguably, possibly]
+  reporting_verbs: [say, claim, report, argue, tell, write, announce, state, allege, describe, according]
+  presupposition_triggers: [again, still, stop, continue, even, only, already, return, restore]
+  zero_shot_batch_size: 16
+  zero_shot_frames:
+    - security and threat
+    - economy and material cost
+    - culture and national identity
+    - law and public order
+    - democracy and representation
+    - welfare and public services
+    - family and children
+    - media and institutional trust
+    - mobilisation and collective action
+  frames:
+    security_threat: [threat, danger, risk, protect, security, unsafe, invasion, defend]
+    economy_cost: [cost, tax, jobs, employment, housing, wages, economy, economic, burden]
+    culture_identity: [culture, heritage, tradition, identity, nation, national, values]
+    law_order: [law, legal, illegal, crime, police, justice, order, court]
+    democracy_representation: [democracy, democratic, vote, election, representation, mandate]
+    welfare_public_services: [welfare, hospital, school, services, healthcare, benefits]
+    family_children: [family, families, child, children, parent, parents]
+    media_institutions: [media, press, journalist, establishment, institution, council, government]
+    mobilisation: [join, attend, campaign, rally, march, meeting, action, volunteer]
+  legitimation:
+    authorisation: [expert, official, authority, law, court, research, evidence]
+    moral_evaluation: [right, wrong, duty, moral, immoral, fair, unfair, justice]
+    rationalisation: [because, therefore, so that, in order to, necessary, practical]
+    mythopoesis: [story, history teaches, lesson, example, once, future generations]
+
+image_analysis:
+  embedding_batch_size: 32
+  minimum_cluster_images: 20
+  minimum_cluster_size: 5
+  cluster_n_neighbors: 15
+  cluster_seed: 42
+  object_threshold: 0.15
+  visual_categories:
+    - a protest, march, rally, or street demonstration
+    - an indoor meeting, speech, or conference
+    - a posed portrait or small group portrait
+    - a crowd or community group activity
+    - a flag, emblem, banner, sign, or political symbol
+    - a screenshot, document, poster, leaflet, or social media graphic
+    - a building, street, landscape, or place
+    - a map, chart, table, or infographic
+    - merchandise, printed material, or a product
+    - another type of image
+  object_queries: [person, crowd, flag, banner, sign, poster, microphone, podium, building, vehicle, map, chart]
+
+multimodal:
+  high_similarity_threshold: 0.30
+  low_similarity_threshold: 0.10
+  ocr_redundancy_threshold: 0.12
+  review_examples_per_relation: 20
+
+topics:
+  minimum_documents: 50
+  embedding_batch_size: 32
+  seeds: [13, 42, 87]
+  n_neighbors: 15
+  n_components: 5
+  min_dist: 0.0
+  min_cluster_size: 10
+  minimum_term_document_frequency: 3

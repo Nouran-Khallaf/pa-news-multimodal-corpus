@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Patriotic Alternative public news article record",
+  "type": "object",
+  "required": [
+    "document_id",
+    "request_url",
+    "final_url",
+    "retrieved_at_utc",
+    "title",
+    "section",
+    "language",
+    "body",
+    "paragraphs",
+    "word_count",
+    "raw_payload_sha256",
+    "derived_text_sha256",
+    "raw_html_path",
+    "images",
+    "collection_run_id",
+    "rights_status"
+  ],
+  "properties": {
+    "document_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{20}$"
+    },
+    "request_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "final_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "retrieved_at_utc": {
+      "type": "string"
+    },
+    "published_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "author": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "section": {
+      "const": "news"
+    },
+    "language": {
+      "const": "en"
+    },
+    "body": {
+      "type": "string",
+      "minLength": 20
+    },
+    "paragraphs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "word_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "raw_payload_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "derived_text_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "raw_html_path": {
+      "type": "string"
+    },
+    "images": {
+      "type": "array"
+    },
+    "comments_collected": {
+      "const": false
+    },
+    "rights_status": {
+      "type": "string"
+    },
+    "email_redactions": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "personal_data_flag": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}

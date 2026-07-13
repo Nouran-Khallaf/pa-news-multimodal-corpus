@@ -1,0 +1,55 @@
+site:
+  base_url: https://www.patrioticalternative.org.uk
+  news_url: https://www.patrioticalternative.org.uk/news
+  article_hosts:
+  - www.patrioticalternative.org.uk
+  - patrioticalternative.org.uk
+  image_hosts:
+  - www.patrioticalternative.org.uk
+  - patrioticalternative.org.uk
+  - assets.nationbuilder.com
+  - d3n8a8pro7vhmx.cloudfront.net
+  - patrioticalternative.nationbuilder.com
+scope:
+  listing_path: /news
+  excluded_path_prefixes:
+  - /join
+  - /donate
+  - /contact
+  - /login
+  - /users
+  - /forms
+  - /privacy
+  - /refund
+  exclude_comments: true
+  minimum_body_words: 0
+crawl:
+  concurrency: 1
+  delay_seconds: 3.0
+  jitter_seconds: 1.5
+  timeout_seconds: 45
+  max_response_bytes: 15000000
+  max_image_bytes: 30000000
+  max_listing_pages: 500
+  stop_after_consecutive_pages_without_new_urls: 2
+  max_retries_server_errors: 2
+  server_error_backoff_seconds: 30
+  stop_statuses:
+  - 401
+  - 403
+  - 429
+  require_robots_check: true
+  stop_if_robots_unavailable: true
+  allow_explicit_asset_fetch_when_robots_unavailable: true
+output:
+  root: outputs/pa_news
+  raw_html_dir: data/raw/html
+  image_object_dir: data/raw/images/objects
+  processed_jsonl: data/processed/articles.jsonl
+  images_jsonl: data/processed/images.jsonl
+  urls_jsonl: manifests/article_urls.jsonl
+  requests_jsonl: manifests/requests.jsonl
+  failures_jsonl: manifests/failures.jsonl
+  skipped_images_jsonl: manifests/skipped_images.jsonl
+  run_summary_json: manifests/run_summary.json
+  log_file: logs/collector.log

@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "Please cite this software if you use the collection or analysis pipeline."
+title: "Patriotic Alternative public-news multimodal corpus pipeline"
+type: software
+authors:
+  - family-names: Khallaf
+    given-names: Nouran
+version: 0.2.0
+date-released: 2026-07-12
